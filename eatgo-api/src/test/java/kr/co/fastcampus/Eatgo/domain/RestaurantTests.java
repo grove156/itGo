@@ -17,6 +17,7 @@ class RestaurantTests {
         assertThat(restaurant.getId(), is(1004L));
         assertThat(restaurant.getName(), is("Bob zip"));
         assertThat(restaurant.getAddress(), is("Seoul"));
+
     }
 
     @Test
