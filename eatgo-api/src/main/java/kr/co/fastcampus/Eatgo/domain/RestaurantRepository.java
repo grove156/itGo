@@ -1,12 +1,15 @@
 package kr.co.fastcampus.Eatgo.domain;
 
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface RestaurantRepository {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     List<Restaurant> findAll();
 
-    Restaurant findById(Long id);
+    Optional<Restaurant> findById(Long id);
+
+    Restaurant save(Restaurant restaurant);
 }
