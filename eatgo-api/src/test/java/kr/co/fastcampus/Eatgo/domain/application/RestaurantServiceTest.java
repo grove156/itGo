@@ -60,17 +60,44 @@ class RestaurantServiceTest {
 
     @Test
     public void addRestaurant(){
-        Restaurant restaurant = new Restaurant("BeRyong","Seoul");
-        Restaurant saved = new Restaurant(1234L,"BeRyong", "Seoul");
-        given(restaurantRepository.save(any())).willReturn(saved);
-        restaurantService.addRestaurant(restaurant);
+        given(restaurantRepository.save(any())).will(invocation -> {
+            Restaurant restaurant = invocation.getArgument(0);
+            restaurant.setId(1234L);
+            return restaurant;
+        });
 
+        Restaurant restaurant = Restaurant.builder()
+                .name("BeRyong")
+                .address("Seoul")
+                .build();
         Restaurant created = restaurantService.addRestaurant(restaurant);
         assertThat(created.getId(), is(1234L));
     }
 
+    @Test
+    public void updateRestaurant(){
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
+
+
+        given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
+
+        restaurantService.updateRestaurant(1004L,"JokerHouse","Busan");
+
+        assertThat(restaurant.getName(), is("JokerHouse"));
+        assertThat(restaurant.getAddress(), is("Busan"));
+    }
+
     private void mockRestaurantRepository() {
-        Restaurant restaurant = new Restaurant(1004L,"Bob zip", "Seoul");
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
+
 
         List<Restaurant> restaurants = new ArrayList<Restaurant>();
         restaurants.add(restaurant);
@@ -80,10 +107,15 @@ class RestaurantServiceTest {
     }
 
     private void mockMenuItemRepository() {
-
         List<MenuItem>  menuItems = new ArrayList<MenuItem>();
-        menuItems.add(new MenuItem("Kimchi"));
+        menuItems.add(
+                MenuItem.builder()
+                        .name("Kimchi")
+                        .build()
+        );
 
         given(menuItemRepository.findByRestaurantId(1004L)).willReturn(menuItems);
     }
+
+
 }

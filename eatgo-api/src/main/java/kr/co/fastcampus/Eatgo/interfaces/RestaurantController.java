@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@CrossOrigin//SPA 서버와 연동하기 위해서 사용되는 태그
 @RestController
 public class RestaurantController {
 
@@ -44,8 +45,16 @@ public class RestaurantController {
         Restaurant restaurant = new Restaurant(name, address);
         Restaurant created = restaurantService.addRestaurant(restaurant);
 
-        URI location = new URI("/restaurants/"+restaurant.getId());
+        URI location = new URI("/restaurants/1234");
         return ResponseEntity.created(location).body("{}"); //response 코드를 201로 주기 위해서 created(location)을 사용함 .body는 바디안에 들어갈 내용
     }
 
+    @PatchMapping("/restaurants/{id}")
+    public String update(@PathVariable Long id, @RequestBody Restaurant restaurant){
+        String name = restaurant.getName();
+        String address = restaurant.getAddress();
+        restaurantService.updateRestaurant(id, name, address);
+
+        return "{}";
+    }
 }

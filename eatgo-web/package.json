@@ -1,0 +1,19 @@
+{
+  "name": "eatgo-web",
+  "version": "1.0.0",
+  "description": "eatgo-web",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "webpack-dev-server --port 3000",
+    "test": "jest"
+  },
+  "author": "kim",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "webpack": "^4.44.1"
+  }
+}

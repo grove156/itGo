@@ -1,5 +1,6 @@
 package kr.co.fastcampus.Eatgo.domain.application;
 
+import com.sun.org.apache.bcel.internal.generic.ARETURN;
 import kr.co.fastcampus.Eatgo.domain.MenuItem;
 import kr.co.fastcampus.Eatgo.domain.MenuItemRepository;
 import kr.co.fastcampus.Eatgo.domain.Restaurant;
@@ -7,10 +8,12 @@ import kr.co.fastcampus.Eatgo.domain.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RestaurantService {
@@ -45,5 +48,14 @@ public class RestaurantService {
         Restaurant saved = restaurantRepository.save(restaurant);
 
         return saved;
+    }
+
+    @Transactional // 이 블럭을 벗어날 때 commit을해서 저장을 하게됨
+    public Restaurant updateRestaurant(Long id, String name, String address) {
+        //
+        Restaurant restaurant = restaurantRepository.findById(id).orElse(null);
+
+        restaurant.setInformation(name, address);
+        return restaurant;
     }
 }
