@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -66,7 +64,7 @@ class RestaurantControllerTests {
     }
 
     @Test
-    public void detail() throws Exception {
+    public void detailWithExisted() throws Exception {
         Restaurant restaurant1 = Restaurant.builder()
                 .id(1004L)
                 .name("Bob zip")
@@ -99,7 +97,16 @@ class RestaurantControllerTests {
     }
 
     @Test
-    public void create() throws Exception {
+    public void detailWithNotExisted() throws Exception {
+        given(restaurantService.getRestaurant(404L)).willThrow(new RestaurantNotFoundException(404L));
+
+        mvc.perform(get("/restaurant/404"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("{}"));
+    }
+
+    @Test
+    public void createWithValidData() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                 .id(1234L)
                 .name("BeRyong")
@@ -116,11 +123,27 @@ class RestaurantControllerTests {
     }
 
     @Test
-    public void update() throws Exception {
+    public void createWithInvalidData() throws Exception {
+        mvc.perform(post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON) //바디에서 오는 컨텐츠 타입이 json파일인걸 정의함
+                .content("{\"name\": \"\", \"address\": \"\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateWithValidData() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"JokerHouse\", \"address\": \"Busan\"}"))
                 .andExpect(status().isOk());
         verify(restaurantService).updateRestaurant(1004L,"JokerHouse","Busan");
+    }
+
+    @Test
+    public void updateWithInvalidData() throws Exception {
+        mvc.perform(patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"\", \"address\": \"\"}"))
+                .andExpect(status().isBadRequest());
     }
 }

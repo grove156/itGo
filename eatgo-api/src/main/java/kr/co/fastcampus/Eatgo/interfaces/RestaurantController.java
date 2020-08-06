@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurants")
-    public ResponseEntity<?> create(@RequestBody Restaurant resource) throws URISyntaxException { //ResponseEntity는 http response를 핸들리 항기 위해 사용한다,
+    public ResponseEntity<?> create(@Valid @RequestBody Restaurant resource) throws URISyntaxException { //ResponseEntity는 http response를 핸들리 항기 위해 사용한다,
         String name = resource.getName();
         String address = resource.getAddress();
         Restaurant restaurant = new Restaurant(name, address);
@@ -50,7 +51,7 @@ public class RestaurantController {
     }
 
     @PatchMapping("/restaurants/{id}")
-    public String update(@PathVariable Long id, @RequestBody Restaurant restaurant){
+    public String update(@PathVariable Long id,@Valid @RequestBody Restaurant restaurant){
         String name = restaurant.getName();
         String address = restaurant.getAddress();
         restaurantService.updateRestaurant(id, name, address);

@@ -2,6 +2,7 @@ package kr.co.fastcampus.Eatgo.domain.application;
 
 import kr.co.fastcampus.Eatgo.domain.*;
 import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-//@SpringBootTest
+@SpringBootTest
 class RestaurantServiceTest {
 
     private RestaurantService restaurantService;
@@ -44,12 +45,22 @@ class RestaurantServiceTest {
     }
 
     @Test
-    public void getRestaurant(){
+    public void getRestaurantWithExist(){
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
         assertThat(restaurant.getId(), is(1004L));
 
         MenuItem menuItem = restaurant.getMenuItems().get(0);
         assertThat(menuItem.getName(), is("Kimchi"));
+    }
+
+    @Test
+    public void getRestaurantWithoutExist(){
+        try {
+            Restaurant restaurant = restaurantService.getRestaurant(404L);
+        }catch(RestaurantNotFoundException e){
+            Assertions.assertEquals("Could not find the restaurant 404",e.getMessage());
+        }
+
     }
 
     @Test
