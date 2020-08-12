@@ -37,6 +37,10 @@ public class Restaurant {
     @JsonInclude(JsonInclude.Include.NON_NULL) //json으로 패싱할때 이부분이 null이면 보내지 않음
     private List<MenuItem> menuItems = new ArrayList<MenuItem>();
 
+    @Transient //DB에서 처리하지 않고 통과하게 만드는 어노테이션
+    @JsonInclude(JsonInclude.Include.NON_NULL) //json으로 패싱할때 이부분이 null이면 보내지 않음
+    private List<Review> reviews;
+
     public List<MenuItem> getMenuItems(){
         return menuItems;
     }
@@ -59,6 +63,10 @@ public class Restaurant {
         for(MenuItem menuItem: menuItems){
             addMenuItem(menuItem);
         }
+    }
+
+    public void setReviews(List<Review> review) {
+        this.reviews = new ArrayList<Review>(review);
     }
 }
 

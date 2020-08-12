@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
-    List<MenuItem> findByRestaurantId(Long RestaurantId);
+    List<MenuItem> findAllByRestaurantId(Long RestaurantId);
 
 }

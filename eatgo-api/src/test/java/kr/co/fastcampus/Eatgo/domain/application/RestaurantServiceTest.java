@@ -1,27 +1,23 @@
 package kr.co.fastcampus.Eatgo.domain.application;
 
 import kr.co.fastcampus.Eatgo.domain.*;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 class RestaurantServiceTest {
@@ -34,6 +30,9 @@ class RestaurantServiceTest {
     @Mock // mokito의 @Mock으로 설정하므로서 RestaurantRepository에서 직접 주입받지 않고 가짜 객체를 만들어서 진짜 저장된 것처럼 행동함. 단위테
     private MenuItemRepository menuItemRepository;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
     @BeforeEach //AOP? 테스트 할때 테스트 하기전에 항상 먼저 실행됨
     public void setUp(){
         MockitoAnnotations.initMocks(this); //목 객체 할당 @Mock 이 붙은 객체를 초기화 시켜줌
@@ -41,16 +40,32 @@ class RestaurantServiceTest {
         mockRestaurantRepository(); //가짜 객체 주입, 아래에 있음
         mockMenuItemRepository();
 
-        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository);
+        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, reviewRepository);
     }
 
     @Test
     public void getRestaurantWithExist(){
+        given(reviewRepository.findAllByRestaurantId(any())).willReturn(
+                Arrays.asList(Review.builder()
+                        .id(1L)
+                        .name("Joker")
+                        .score(5)
+                        .description("Goode")
+                        .restaurantId(1004L)
+                        .build())
+        );
+
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
         assertThat(restaurant.getId(), is(1004L));
 
         MenuItem menuItem = restaurant.getMenuItems().get(0);
         assertThat(menuItem.getName(), is("Kimchi"));
+
+        Review review = restaurant.getReviews().get(0);
+        assertThat(review.getScore(), is(5));
+
+        verify(menuItemRepository).findAllByRestaurantId(any());
+        verify(reviewRepository).findAllByRestaurantId(any());
     }
 
     @Test
@@ -125,7 +140,7 @@ class RestaurantServiceTest {
                         .build()
         );
 
-        given(menuItemRepository.findByRestaurantId(1004L)).willReturn(menuItems);
+        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
     }
 
 
