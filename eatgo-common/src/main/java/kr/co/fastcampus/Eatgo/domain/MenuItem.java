@@ -2,6 +2,7 @@ package kr.co.fastcampus.Eatgo.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,8 @@ import javax.persistence.Transient;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Data
+@Builder
 @Entity
 public class MenuItem {
 
@@ -30,3 +31,5 @@ public class MenuItem {
     @JsonInclude(JsonInclude.Include.NON_DEFAULT) //기본값이 아니면 넣어라
     private boolean isDestroyed;
 }
+
+
