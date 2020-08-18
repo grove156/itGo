@@ -89,6 +89,7 @@ class RestaurantServiceTest {
     public void updateRestaurant(){
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build();
@@ -105,6 +106,7 @@ class RestaurantServiceTest {
     private void mockRestaurantRepository() {
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build();

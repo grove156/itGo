@@ -67,6 +67,7 @@ class RestaurantControllerTests {
     public void detailWithExisted() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build();
@@ -92,12 +93,13 @@ class RestaurantControllerTests {
     public void createWithValidData() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                 .id(1234L)
+                .categoryId(1L)
                 .name("BeRyong")
                 .address("Seoul")
                 .build();
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON) //바디에서 오는 컨텐츠 타입이 json파일인걸 정의함
-                .content("{\"name\": \"BeRyong\", \"address\": \"Seoul\"}"))
+                .content("{\"categoryId\":1,\"name\": \"BeRyong\", \"address\": \"Seoul\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location","/restaurants/1234"))
                 .andExpect(content().string("{}"));
@@ -109,7 +111,7 @@ class RestaurantControllerTests {
     public void createWithInvalidData() throws Exception {
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON) //바디에서 오는 컨텐츠 타입이 json파일인걸 정의함
-                .content("{\"name\": \"\", \"address\": \"\"}"))
+                .content("{\"categoryId\":1,\"name\": \"\", \"address\": \"\"}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -117,7 +119,7 @@ class RestaurantControllerTests {
     public void updateWithValidData() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"JokerHouse\", \"address\": \"Busan\"}"))
+                .content("{\"categoryId\":1,\"name\": \"JokerHouse\", \"address\": \"Busan\"}"))
                 .andExpect(status().isOk());
         verify(restaurantService).updateRestaurant(1004L,"JokerHouse","Busan");
     }

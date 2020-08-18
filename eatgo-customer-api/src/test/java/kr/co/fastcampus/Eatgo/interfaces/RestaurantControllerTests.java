@@ -53,15 +53,16 @@ class RestaurantControllerTests {
         restaurants.add(
                 Restaurant.builder()
                         .id(1004L)
+                        .categoryId(1L)
                         .name("Bob zip")
                         .address("Seoul")
                         .build()
         );
         //mokito를 이용한 가짜객체 주입
-        given(restaurantService.getRestaurants()).willReturn(restaurants);
+        given(restaurantService.getRestaurants("seoul",1L)).willReturn(restaurants);
 
         //mockMvc를 이용해서 테스트
-        mvc.perform(get("/restaurants"))
+        mvc.perform(get("/restaurants?region=seoul&category=1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1004")))
                 .andExpect(content().string(containsString("\"name\":\"Bob zip\"")));
