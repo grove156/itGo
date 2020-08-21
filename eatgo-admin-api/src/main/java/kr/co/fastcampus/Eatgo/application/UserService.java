@@ -37,7 +37,7 @@ public class UserService {
     }
 
     public void deactiveUser(Long id) {
-        //TODO:worworwor
+
         User userBeingdeleted = userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
     }
 }

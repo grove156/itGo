@@ -26,7 +26,7 @@ public class RestaurantService {
     }
 
     public List<Restaurant> getRestaurants(String region, long categoryId) {
-        //TODO: FILETRING WITH category
+
         List<Restaurant> restaurants = restaurantRepository.findByAddressContainingAndCategoryId(region, categoryId);
         return restaurants;
     }
