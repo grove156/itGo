@@ -8,3 +8,5 @@ spring:
     show_sql: true
     format_sql: true
 
+jwt:
+  secret: goodlekkfekfosd@424fe4oj5ojofjsdifjhij3lkfjl3jlkrjldk1252f

@@ -4,6 +4,7 @@ import kr.co.fastcampus.Eatgo.domain.EmailExistedException;
 import kr.co.fastcampus.Eatgo.domain.User;
 import kr.co.fastcampus.Eatgo.domain.UserRepository;
 import kr.co.fastcampus.Eatgo.interfaces.EmailNotExistedException;
+import kr.co.fastcampus.Eatgo.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -44,7 +48,7 @@ public class UserService {
         return newUser;
     }
 
-    public User authenticate(String email, String password) {
+    public String authenticate(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(()->new EmailNotExistedException(email));
 
         //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -54,6 +58,7 @@ public class UserService {
             throw new PasswordWrongException();
         }
 
-        return user;
+        String accessToken = jwtUtil.createToken(user.getId(),user.getName());
+        return accessToken;
     }
 }

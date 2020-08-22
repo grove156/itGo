@@ -3,6 +3,7 @@ package kr.co.fastcampus.Eatgo.interfaces;
 import kr.co.fastcampus.Eatgo.application.UserService;
 import kr.co.fastcampus.Eatgo.application.PasswordWrongException;
 import kr.co.fastcampus.Eatgo.domain.User;
+import kr.co.fastcampus.Eatgo.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 
@@ -31,6 +33,9 @@ class SessionControllerTests {
     private MockMvc mvc;
 
     @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
     private UserService userService;
 
 
@@ -40,17 +45,21 @@ class SessionControllerTests {
 
         String email = "tester@example.com";
         String password = "test";
+        Long id = 1004L;
+        String name = "Kim";
 
-        User mockUser = User.builder().password("ACCESSTOKEN").build();
+        User mockUser = User.builder().name(name).id(id).build();
 
         given(userService.authenticate(email,password)).willReturn(mockUser);
+        given(jwtUtil.createToken(id,name)).willReturn("header.payload.signiture");
 
         mvc.perform(post("/session")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"email\": \"tester@example.com\", \"password\": \"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location","/session"))
-                .andExpect(content().string("{\"accessToken\":\"ACCESSTOKE\"}"));
+                .andExpect(content().string(containsString("{\"accessToken\":}")))
+                .andExpect(content().string(containsString(".")));
 
         verify(userService).authenticate(eq(email),eq(password));
     }

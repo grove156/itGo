@@ -1,5 +1,8 @@
 package kr.co.fastcampus.Eatgo;
 
+import kr.co.fastcampus.Eatgo.utils.JwtUtil;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +16,9 @@ import sun.security.util.Password;
 @EnableWebSecurity//웹 시큐리티를 사용 가능하게 설정합
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter{//자바기반 설정으로 Spring Security를 사용할 수 있다 WebSecurityConfigurerAdapter를상속받아 빠르게 설정이 가능하다
 
+    @Value("${jwt.secret}")
+    private String secret;
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin().disable()//디폴트 로그인 폼을 없앰
@@ -24,5 +30,10 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter{//자바기
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtUtil jwtUtil(){
+        return new JwtUtil(secret);
     }
 }
