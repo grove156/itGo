@@ -17,10 +17,11 @@ public class JwtUtil {
 
     }
 
-    public String createToken(long id, String name) {//JWT생성
+    public String createToken(long id, String name, Long restaurantId) {//JWT생성
         String token = Jwts.builder()
                 .claim("userId",id)
                 .claim("name",name)
+                .claim("restaurantId",restaurantId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
         return token;

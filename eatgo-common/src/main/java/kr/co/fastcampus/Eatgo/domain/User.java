@@ -28,6 +28,8 @@ public class User {
     @NotNull
     private String name;
 
+    private Long restaurantId;
+
     @NotNull
     private Long level;
 
@@ -41,4 +43,13 @@ public class User {
         }
     }
 
+    public void setRestaurantId(Long restaurantId){
+        this.restaurantId = restaurantId;
+        this.level = 2L;
+    }
+
+    public boolean isRestaurantOwner() {
+        if(level==2) return true;
+        else return false;
+    }
 }

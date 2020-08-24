@@ -1,6 +1,7 @@
 package kr.co.fastcampus.Eatgo.application;
 
 import kr.co.fastcampus.Eatgo.domain.*;
+
 import kr.co.fastcampus.Eatgo.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,29 +23,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerUser(String email, String name, String password) {
-
-        Optional<User> existed = userRepository.findByEmail(email);
-
-        if(existed.isPresent()){
-            throw new EmailExistedException(email);
-        }
-
-        //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();//BCript로 비밀번호 해싱(암호화) -선언
-        String encodedPassword = passwordEncoder.encode(password); //실제 인코딩 구형
-
-        User user = User.builder()
-                .name(name)
-                .email(email)
-                .password(encodedPassword)
-                .level(1L)
-                .build();
-
-        User newUser = userRepository.save(user);
-        return newUser;
-    }
-
-    public String authenticate(String email, String password) {
+    public User authenticate(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(()->new EmailNotExistedException(email));
 
         //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -54,7 +33,7 @@ public class UserService {
             throw new PasswordWrongException();
         }
 
-        String accessToken = jwtUtil.createToken(user.getId(),user.getName());
-        return accessToken;
+
+        return user;
     }
 }

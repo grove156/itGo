@@ -21,4 +21,16 @@ class UserTests {
         assertThat(user.getName(), is("tester"));
         assertThat(user.isAdmin(), is(true));
     }
+
+    @Test
+    public void isRestaurantOwner(){
+        User user = User.builder()
+                .email("example@gmail.com")
+                .name("tester")
+                .level(1L)
+                .build();
+
+        assertThat(user.isRestaurantOwner(), is(true));
+        assertThat(user.getRestaurantId(), is(1004L));
+    }
 }

@@ -1,7 +1,8 @@
 package kr.co.fastcampus.Eatgo.interfaces;
 
 import kr.co.fastcampus.Eatgo.application.UserService;
-import kr.co.fastcampus.Eatgo.application.PasswordWrongException;
+import kr.co.fastcampus.Eatgo.domain.EmailNotExistedException;
+import kr.co.fastcampus.Eatgo.domain.PasswordWrongException;
 import kr.co.fastcampus.Eatgo.domain.User;
 import kr.co.fastcampus.Eatgo.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,8 @@ class SessionControllerTests {
         String password = "test";
         Long id = 1004L;
         String name = "Kim";
+
+        String token = "header.payload.signiture";
 
         User mockUser = User.builder().name(name).id(id).build();
 

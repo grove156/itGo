@@ -28,10 +28,13 @@ public class SessionController {
             String email = resource.getEmail();
             String password = resource.getPassword();
 
-            String accessToken = userService.authenticate(email, password);
+            User user = userService.authenticate(email,password);
 
 
-            return ResponseEntity.created(new URI(url)).body(accessToken);
+            String accessToken = jwtUtil.createToken(user.getId(),user.getName(),user.getRestaurantId());
+
+
+            return ResponseEntity.created(new URI(url)).header("authrization",accessToken).body(user);
         }
 
 }

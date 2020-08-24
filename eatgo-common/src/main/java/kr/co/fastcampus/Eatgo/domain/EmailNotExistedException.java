@@ -1,4 +1,4 @@
-package kr.co.fastcampus.Eatgo.interfaces;
+package kr.co.fastcampus.Eatgo.domain;
 
 import lombok.Getter;
 import lombok.Setter;
