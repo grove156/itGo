@@ -23,7 +23,6 @@ public class Review {
     @GeneratedValue
     private long id;
 
-    @NotEmpty
     private String name;
 
     //@NotNull 인티저나 숫자의 경우 @NotEmpty를 사용할수 없음

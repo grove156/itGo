@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -32,7 +33,9 @@ class ReviewControllerTests {
 
     @Test
     public void createWithValidAttribute() throws Exception {
-        given(reviewService.addReview(any(),any())).willReturn(
+        String token ="eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEwMDQsIm5hbWUiOiJKb2huIn0.aL5SFNFszqxyMILjvqYeXDCVgLa_wEmTt3GdaRGQPkc";
+
+        given(reviewService.addReview(any(),"John","good enough",3)).willReturn(
           Review.builder()
                   .id(123L)
                   .name("Joker")
@@ -42,12 +45,13 @@ class ReviewControllerTests {
                   .build()
         );
         mvc.perform(post("/restaurant/1/reviews")
+                .header("Authorization","Bearer "+token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Joker\",\"score\":\"3\",\"description\":\"good\"}"))
+                .content("{\"score\":\"3\",\"description\":\"good\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location","/restaurant/1/reviews/123"));
 
-        verify(reviewService).addReview(any(), any());
+        verify(reviewService).addReview(any(), eq("John"),eq("good enough"),eq(3));
     }
 
     @Test
@@ -57,6 +61,6 @@ class ReviewControllerTests {
                 .content("{\"name\":,\"score\":\"3\",\"description\":\"good\"}"))
                 .andExpect(status().isBadRequest());
 
-        verify(reviewService, never()).addReview(any(), any());
+        verify(reviewService, never()).addReview(any(), any(), any(), any());
     }
 }
